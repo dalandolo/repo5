@@ -1,0 +1,44 @@
+resources "aws_iam_role" back-bucket
+variable "aws_source_region" {
+  type        = string
+
+  default     = "us-east-1"
+}
+variable "aws_destination_region" {
+  type        = string
+  default     = "us-east-2"
+}
+variable "force_destroy" {
+  type    = bool
+  default = true
+}
+variable "common_tags" {
+  description = "Common tags for all resources"
+  type = map(string)
+  default = {
+  id             = "2008"
+  owner          = "katya"
+  environment    = "dev"
+  project        = "springboot"
+  create_by      = "Terraform"
+  cloud_provider = "aws"
+  company        = "EKS"
+}
+  }
+terraform {
+  required_version = ">= 1.0.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+provider "aws" {
+  alias  = "source-region"
+  region = var.aws_source_region
+}
+provider "aws" {
+  alias  = "destination-region"
+  region = var.aws_destination_region
+}
